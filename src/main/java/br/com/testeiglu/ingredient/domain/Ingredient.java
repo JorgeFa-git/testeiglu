@@ -9,7 +9,7 @@ public class Ingredient extends DatabaseObject implements Serializable {
 
     private String name;
     private BigDecimal price;
-    private int qtyAvailable;
+    private int qty;
 
     public Ingredient() {
     }
@@ -34,12 +34,12 @@ public class Ingredient extends DatabaseObject implements Serializable {
         this.price = price;
     }
 
-    public int getQtyAvailable() {
-        return qtyAvailable;
+    public int getQty() {
+        return qty;
     }
 
-    public void setQtyAvailable(int qtyAvailable) {
-        this.qtyAvailable = qtyAvailable;
+    public void setQty(int qty) {
+        this.qty = qty;
     }
 
     @Override
