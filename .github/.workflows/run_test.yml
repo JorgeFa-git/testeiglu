@@ -1,0 +1,21 @@
+name: Run spring boot tests
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Configura JDK 21
+        uses: actions/setup-java@v2
+        with:
+          java-version: '21'
+          distribution: 'adopt'
+          cache: maven
+
+      - name: Build maven
+        run: ./mvnw -B package --file pom.xml

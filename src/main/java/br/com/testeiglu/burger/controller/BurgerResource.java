@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("burger")
-public class BurgerRestController {
+public class BurgerResource {
 
     private final BurgerService burgerService;
 
-    public BurgerRestController(BurgerService burgerService) {
+    public BurgerResource(BurgerService burgerService) {
         this.burgerService = burgerService;
     }
 
