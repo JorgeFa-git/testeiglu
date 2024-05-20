@@ -4,6 +4,7 @@ import br.com.testeiglu.core.model.DatabaseObject;
 import br.com.testeiglu.ingredient.domain.Ingredient;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,10 @@ public class MenuOption extends DatabaseObject implements Serializable {
 
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public BigDecimal getFullPrice() {
+        return ingredients.stream().map(Ingredient::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public String getIngredientsText() {

@@ -10,6 +10,9 @@ public class Cart {
     private BigDecimal discount;
     private BigDecimal total;
 
+    public Cart() {
+    }
+
     public Cart(List<Burger> burgersFromSession, BigDecimal discount, BigDecimal bigDecimal) {
         this.burgers = burgersFromSession;
         this.discount = discount;

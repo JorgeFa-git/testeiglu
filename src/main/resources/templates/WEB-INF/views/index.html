@@ -22,8 +22,8 @@
       th:onclick="'javascript:addBurgerFromOption(' + ${option.id} + ')'"
     >
       <img alt="food-image" th:src="${option.imgSrc}" width="128" height="128"/>
-      <div class="text" th:text="${option.getIngredientsText()}">
-      </div>
+      <div class="text" th:text="${option.getIngredientsText()}"></div>
+      <div class="price" th:text="'R$ ' + ${option.getFullPrice()}"></div>
     </div>
   </div>
   <div id="display-personalized-tab" class="display-tab hide">
