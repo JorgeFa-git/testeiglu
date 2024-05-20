@@ -1,7 +1,9 @@
 package br.com.testeiglu.cart;
 
 import br.com.testeiglu.burger.domain.Burger;
+import br.com.testeiglu.cart.domain.Cart;
 import br.com.testeiglu.discount.domain.DiscountEnum;
+import br.com.testeiglu.discount.service.DiscountService;
 import br.com.testeiglu.menu.service.dto.BurgerEdition;
 import br.com.testeiglu.util.JsonHelper;
 import org.junit.jupiter.api.Test;
@@ -27,73 +29,102 @@ class CartResourceTest {
     @Autowired
     private MockMvc mockMvc;
 
-    protected MockHttpSession mockHttpSession;
+    @Autowired
+    private DiscountService discountService;
 
     @Test
     @Transactional
     void shouldAdd_LIGHT_DiscountToBurger() throws Exception {
+        var mockHttpSession = new MockHttpSession();
+
         BurgerEdition edition = new BurgerEdition();
         edition.setIngredientIds(List.of(100001L, 100003L));
 
-        var response = this.mockMvc.perform(post("/burger/personalized")
+        var result = this.mockMvc.perform(post("/burger/personalized")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonHelper.toJson(edition))
-            ).andExpect(status().isCreated())
-            .andReturn().getResponse();
+                .session(mockHttpSession)
+            ).andExpect(status().isCreated()).andReturn();
+
+        var response = result.getResponse();
 
         Burger burger = JsonHelper.toObject(response.getContentAsByteArray(), Burger.class);
 
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.LIGHT);
 
-        response = this.mockMvc.perform(get("/cart/")
-            ).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/cart/").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
-        System.out.println(response.getContentAsString());
+        Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
+
+        var expectedDiscount = discountService.calculateTotalDiscount((List<Burger>) mockHttpSession.getAttribute("burgers"));
+
+        assertThat(cart).isNotNull();
+        assertThat(cart.getDiscount()).isEqualTo(expectedDiscount);
     }
 
     @Test
     @Transactional
     void shouldAdd_MUITA_CARNE_DiscountToBurger() throws Exception {
+        var mockHttpSession = new MockHttpSession();
+
         BurgerEdition edition = new BurgerEdition();
         edition.setIngredientIds(List.of(100003L, 100003L, 100003L));
 
-        var response = this.mockMvc.perform(post("/burger/personalized")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonHelper.toJson(edition))
-            ).andExpect(status().isCreated())
-            .andReturn().getResponse();
+        var result = this.mockMvc.perform(post("/burger/personalized")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonHelper.toJson(edition))
+            .session(mockHttpSession)
+        ).andExpect(status().isCreated()).andReturn();
+
+        var response = result.getResponse();
 
         Burger burger = JsonHelper.toObject(response.getContentAsByteArray(), Burger.class);
 
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.MUITA_CARNE);
 
-        mockHttpSession.setAttribute("burgers", List.of(burger));
-
-        response = this.mockMvc.perform(get("/cart/")
-            ).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/cart/").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
-        System.out.println(response.getContentAsString());
+        Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
+
+        var expectedDiscount = discountService.calculateTotalDiscount((List<Burger>) mockHttpSession.getAttribute("burgers"));
+
+        assertThat(cart).isNotNull();
+        assertThat(cart.getDiscount()).isEqualTo(expectedDiscount);
     }
 
     @Test
     @Transactional
     void shouldAdd_MUIT_QUEIJO_DiscountToBurger() throws Exception {
+        var mockHttpSession = new MockHttpSession();
+
         BurgerEdition edition = new BurgerEdition();
         edition.setIngredientIds(List.of(100005L, 100005L, 100005L));
 
-        var response = this.mockMvc.perform(post("/burger/personalized")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonHelper.toJson(edition))
-            ).andExpect(status().isCreated())
-            .andReturn().getResponse();
+        var result = this.mockMvc.perform(post("/burger/personalized")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JsonHelper.toJson(edition))
+            .session(mockHttpSession)
+        ).andExpect(status().isCreated()).andReturn();
+
+        var response = result.getResponse();
 
         Burger burger = JsonHelper.toObject(response.getContentAsByteArray(), Burger.class);
 
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.MUITO_QUEIJO);
+
+        response = this.mockMvc.perform(get("/cart/").session(mockHttpSession)).andExpect(status().isOk())
+            .andReturn().getResponse();
+
+        Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
+
+        var expectedDiscount = discountService.calculateTotalDiscount((List<Burger>) mockHttpSession.getAttribute("burgers"));
+
+        assertThat(cart).isNotNull();
+        assertThat(cart.getDiscount()).isEqualTo(expectedDiscount);
     }
 }
