@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!--  Schemas  -->
+    <include file="config/liquibase/ingredient/changelog/000001_ingredient_schema.sql" />
+    <include file="config/liquibase/menu/changelog/000001_menu_schema.sql" />
+    <include file="config/liquibase/burger/changelog/000001_burger_schema.sql" />
+
+    <!--  Test data  -->
+    <include file="config/liquibase/ingredient/test-data/000001_ingredient_test_data.sql"/>
+    <include file="config/liquibase/menu/test-data/000001_menu_test_data.sql"/>
+</databaseChangeLog>

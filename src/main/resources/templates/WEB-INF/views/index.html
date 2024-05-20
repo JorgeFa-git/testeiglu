@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Cardápio</title>
+  <script src="http://localhost:35729/livereload.js"></script>
+  <link rel="stylesheet" href="/css/main.css"/>
+  <link rel="stylesheet" href="/css/resetcss.css"/>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+<div class="container">
+  <div class="tab-wrapper">
+    <div id="options-tab" class="tab active">Opções</div>
+    <div id="personalized-tab" class="tab">Personalizado</div>
+  </div>
+  <div id="display-options-tab" class="display-tab hide">
+    <div
+      th:each="option: ${options}"
+      class="card"
+      th:onclick="'javascript:addBurgerFromOption(' + ${option.id} + ')'"
+    >
+      <img alt="food-image" th:src="${option.imgSrc}" width="128" height="128"/>
+      <div class="text" th:text="${option.getIngredientsText()}">
+      </div>
+    </div>
+  </div>
+  <div id="display-personalized-tab" class="display-tab">
+    <div class="personalized-form">
+      <div id="selected-list">
+
+      </div>
+      <div>
+        <label>
+          <label for="ingredient-select">Ingrediente</label>
+          <select id="ingredient-select">
+            <option th:each="ingredient: ${ingredients}" th:value="${ingredient.id}"
+                    th:text="${ingredient.name}"></option>
+          </select>
+        </label>
+        <button type="button" onclick="addIngredient()">Adicionar</button>
+      </div>
+      <div>
+        <button type="button" onclick="resetIngredients()">Novo Hamburger</button>
+        <button type="submit" onclick="addBurgerFromForm()">Finalizar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer-cart">
+  <div>
+    Quantidade de hamburguers: <span id="item-count"></span>
+  </div>
+  <div>
+    Desconto aplicado: <span id="discount"></span>
+  </div>
+  <div>
+    total: <span id="cart-total"></span>
+  </div>
+</div>
+
+<script>
+  let ingredients = [];
+
+  $(() => {
+    refreshCartData();
+  })
+
+  function resetIngredients() {
+    ingredients = [];
+    $("#selected-list").empty();
+  }
+
+  function addIngredient() {
+    const ingredientSelected = $("#ingredient-select option:selected");
+    ingredients.push(ingredientSelected.val())
+    $("#selected-list").append("<div>" + ingredientSelected.text() + "</div>")
+  }
+
+  function addBurgerFromForm() {
+    if (!ingredients.length) {
+      return;
+    }
+
+    $.post({
+      url: '/burger/personalized',
+      dataType: 'json',
+      contentType: 'application/json',
+      data: JSON.stringify({ingredientIds: [...ingredients]}),
+      success: () => {
+        resetIngredients();
+        refreshCartData();
+      }
+    })
+  }
+
+  function addBurgerFromOption(optionId) {
+    $.post("burger/from-menu-option/" + optionId, () => {
+      refreshCartData();
+    });
+  }
+
+  function refreshCartData() {
+    $.get("/cart/", data => {
+      var currencyFormat = new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      });
+
+      $("#cart-total").html(currencyFormat.format(data.total));
+      $("#discount").html(currencyFormat.format(data.discount));
+      $("#item-count").html(data.burgers.length);
+    })
+  }
+
+  $("#options-tab").on("click", () => {
+    $("#options-tab").addClass("active");
+    $("#personalized-tab").removeClass("active");
+    $("#display-options-tab").removeClass("hide");
+    $("#display-personalized-tab").addClass("hide");
+  });
+  $("#personalized-tab").on("click", () => {
+    $("#personalized-tab").addClass("active");
+    $("#options-tab").removeClass("active");
+    $("#display-options-tab").addClass("hide");
+    $("#display-personalized-tab").removeClass("hide");
+  });
+</script>
+
+</body>
+</html>

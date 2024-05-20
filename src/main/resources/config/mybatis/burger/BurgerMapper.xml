@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.testeiglu.burger.repository.BurgerMapper">
+
+    <insert
+        id="saveBurger"
+        parameterType="br.com.testeiglu.burger.domain.Burger"
+        keyProperty="id"
+        useGeneratedKeys="true"
+    >
+        INSERT INTO burger.burger(name) VALUES ( #{burger.name} )
+    </insert>
+
+    <insert id="relateIngredientsToBurger">
+        INSERT INTO burger.burger_ingredients(burger_id, ingredient_id)
+        <foreach item="id" collection="ingredientsId" open="VALUES" separator=",">
+            (#{burgerId}, #{id})
+        </foreach>
+    </insert>
+
+    <insert id="addDiscountsToBurger">
+        INSERT INTO burger.burger_discounts(burger_id, discount)
+        <foreach collection="discountEnums" open="VALUES" item="discount" separator=",">
+            (#{burgerId}, #{discount})
+        </foreach>
+    </insert>
+
+    <select id="findById" resultMap="burger.result_map.BurgerResultMap.BurgerResultMap">
+        SELECT
+            b.id,
+            b.name
+        FROM burger.burger b
+        WHERE b.id = #{burgerId}
+    </select>
+
+    <select id="findAllIngredientsByBurgerId" resultType="br.com.testeiglu.ingredient.domain.Ingredient">
+        SELECT
+            i.*
+        FROM burger.burger_ingredients bi
+            JOIN ingredient.ingredient i ON i.id = bi.ingredient_id AND bi.burger_id = #{burgerId}
+    </select>
+
+    <select id="findAllDiscountsByBurgerId" resultType="br.com.testeiglu.discount.domain.DiscountEnum">
+        SELECT
+            bd.discount
+        FROM burger.burger_discounts bd
+        WHERE bd.burger_id = #{burgerId}
+    </select>
+</mapper>

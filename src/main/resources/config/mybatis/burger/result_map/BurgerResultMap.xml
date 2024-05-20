@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="burger.result_map.BurgerResultMap">
+    <resultMap id="BurgerResultMap" type="br.com.testeiglu.burger.domain.Burger">
+        <id property="id" column="id"/>
+        <id property="name" column="name"/>
+
+        <collection property="ingredients" select="br.com.testeiglu.burger.repository.BurgerMapper.findAllIngredientsByBurgerId" column="id"/>
+        <collection property="discounts" select="br.com.testeiglu.burger.repository.BurgerMapper.findAllDiscountsByBurgerId" column="id"/>
+    </resultMap>
+</mapper>

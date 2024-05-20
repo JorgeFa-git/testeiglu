@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.com.testeiglu.menu.repository.MenuMapper">
+
+    <select id="findAll" resultMap="menu.result_map.MenuResultMap.ResultMapAllMenuOptions">
+        SELECT
+            mo.id,
+            mo.name,
+            mo.img_src
+        FROM menu.menu_option mo;
+    </select>
+
+    <select id="findById" resultMap="menu.result_map.MenuResultMap.ResultMapAllMenuOptions">
+        SELECT
+            mo.id,
+            mo.name,
+            mo.img_src
+        FROM menu.menu_option mo
+        WHERE mo.id = #{optionId};
+    </select>
+
+    <select id="findAllIngredientsByMenuOptionId" resultType="br.com.testeiglu.ingredient.domain.Ingredient">
+        SELECT
+            i.*
+        FROM menu.menu_option_ingredients moi
+                 JOIN ingredient.ingredient i ON i.id = moi.ingredient_id AND moi.menu_option_id = #{menuOptionId}
+    </select>
+</mapper>
