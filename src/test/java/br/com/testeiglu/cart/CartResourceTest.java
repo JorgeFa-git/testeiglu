@@ -40,7 +40,7 @@ class CartResourceTest {
         BurgerEdition edition = new BurgerEdition();
         edition.setIngredientIds(List.of(100001L, 100003L));
 
-        var result = this.mockMvc.perform(post("/burger/personalized")
+        var result = this.mockMvc.perform(post("/api/burger/personalized")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonHelper.toJson(edition))
                 .session(mockHttpSession)
@@ -53,7 +53,7 @@ class CartResourceTest {
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.LIGHT);
 
-        response = this.mockMvc.perform(get("/cart").session(mockHttpSession)).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/api/cart").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
         Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
@@ -72,7 +72,7 @@ class CartResourceTest {
         BurgerEdition edition = new BurgerEdition();
         edition.setIngredientIds(List.of(100003L, 100003L, 100003L));
 
-        var result = this.mockMvc.perform(post("/burger/personalized")
+        var result = this.mockMvc.perform(post("/api/burger/personalized")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonHelper.toJson(edition))
             .session(mockHttpSession)
@@ -85,7 +85,7 @@ class CartResourceTest {
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.MUITA_CARNE);
 
-        response = this.mockMvc.perform(get("/cart").session(mockHttpSession)).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/api/cart").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
         Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
@@ -104,7 +104,7 @@ class CartResourceTest {
         BurgerEdition edition = new BurgerEdition();
         edition.setIngredientIds(List.of(100005L, 100005L, 100005L));
 
-        var result = this.mockMvc.perform(post("/burger/personalized")
+        var result = this.mockMvc.perform(post("/api/burger/personalized")
             .contentType(MediaType.APPLICATION_JSON)
             .content(JsonHelper.toJson(edition))
             .session(mockHttpSession)
@@ -117,7 +117,7 @@ class CartResourceTest {
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.MUITO_QUEIJO);
 
-        response = this.mockMvc.perform(get("/cart").session(mockHttpSession)).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/api/cart").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
         Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
