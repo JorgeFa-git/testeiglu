@@ -21,7 +21,7 @@ function addBurgerFromForm() {
   }
 
   $.post({
-    url: '/burger/personalized',
+    url: '/api/burger/personalized',
     dataType: 'json',
     contentType: 'application/json',
     data: JSON.stringify({ingredientIds: [...ingredients]}),
@@ -33,13 +33,13 @@ function addBurgerFromForm() {
 }
 
 function addBurgerFromOption(optionId) {
-  $.post("burger/from-menu-option/" + optionId, () => {
+  $.post("/api/burger/from-menu-option/" + optionId, () => {
     refreshCartData();
   });
 }
 
 function refreshCartData() {
-  $.get("/cart/", data => {
+  $.get("/api/cart", data => {
     var currencyFormat = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
