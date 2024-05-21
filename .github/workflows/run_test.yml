@@ -17,5 +17,5 @@ jobs:
           distribution: 'adopt'
           cache: maven
 
-      - name: Build maven
+      - name: Run tests
         run: ./mvnw test
