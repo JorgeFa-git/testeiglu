@@ -53,7 +53,7 @@ class CartResourceTest {
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.LIGHT);
 
-        response = this.mockMvc.perform(get("/cart/").session(mockHttpSession)).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/cart").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
         Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
@@ -85,7 +85,7 @@ class CartResourceTest {
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.MUITA_CARNE);
 
-        response = this.mockMvc.perform(get("/cart/").session(mockHttpSession)).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/cart").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
         Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
@@ -117,7 +117,7 @@ class CartResourceTest {
         assertThat(burger).isNotNull();
         assertThat(burger.getDiscounts()).contains(DiscountEnum.MUITO_QUEIJO);
 
-        response = this.mockMvc.perform(get("/cart/").session(mockHttpSession)).andExpect(status().isOk())
+        response = this.mockMvc.perform(get("/cart").session(mockHttpSession)).andExpect(status().isOk())
             .andReturn().getResponse();
 
         Cart cart = JsonHelper.toObject(response.getContentAsByteArray(), Cart.class);
